@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FitPulse</title>
+    <!-- Ensure this path matches your folder structure (likely 'style.css') -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="auth-page">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+            </div>
+            <span class="brand-name">FitPulse</span>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('welcome') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('login') }}" class="nav-link active">Login</a>
+            <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+        </div>
+    </nav>
+
+    <main class="auth-main">
+        <div class="auth-container">
+            <div class="auth-visual">
+                <div class="visual-content">
+                    <div class="pulse-animation">
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-ring delay-1"></div>
+                        <div class="pulse-ring delay-2"></div>
+                        <svg class="heart-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </div>
+                    <h2>Monitor Your Health</h2>
+                    <p>Track vital signs, detect anomalies early, and take control of your wellbeing with FitPulse.</p>
+                </div>
+            </div>
+            <div class="auth-form-container">
+                <div class="form-header">
+                    <h1>Welcome Back</h1>
+                    <p>Sign in to access your health dashboard</p>
+                </div>
+
+                <!-- FLASH MESSAGES BLOCK ADDED HERE -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="alert alert-{{ category }}">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                <!-- END FLASH MESSAGES -->
+
+                <form class="auth-form" action="{{ url_for('login') }}" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-wrapper">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" name="remember">
+                            <span class="checkmark"></span>
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        Sign In
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </form>
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="{{ url_for('register') }}">Create one</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

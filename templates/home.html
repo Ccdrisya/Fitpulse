@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - FitPulse</title>
+    <!-- Ensure this path matches your folder structure -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Specific styles for the new sections */
+        .home-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 768px) {
+            .home-grid { grid-template-columns: 1fr; }
+        }
+
+        .snapshot-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .snapshot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .snapshot-header h3 { font-size: 1.1rem; color: var(--text-secondary); font-weight: 500; }
+        
+        .snapshot-values {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .snapshot-stat h2 { font-size: 2rem; margin: 0; color: var(--text-primary); }
+        .snapshot-stat span { font-size: 0.85rem; color: var(--text-muted); }
+
+        .goal-card {
+            background: linear-gradient(135deg, rgba(22, 165, 150, 0.1), rgba(22, 165, 150, 0.02));
+            border: 1px solid rgba(22, 165, 150, 0.3);
+        }
+        .goal-item { margin-bottom: 1rem; }
+        .goal-item:last-child { margin-bottom: 0; }
+        .goal-label { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .goal-bar { height: 8px; background: var(--bg-elevated); border-radius: 10px; overflow: hidden; }
+        .goal-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+
+        .no-data-box {
+            background: var(--bg-card);
+            border: 1px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <nav class="navbar dashboard-nav">
+        <div class="nav-brand">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+            </div>
+            <span class="brand-name">FitPulse</span>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-link active">Home</a>
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('data_entry') }}" class="nav-link">Add Data</a>
+            <a href="{{ url_for('profile') }}" class="nav-link">Profile</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-avatar"><span>{{ user.username[0] }}</span></div>
+            <a href="{{ url_for('logout') }}" class="btn btn-ghost">Logout</a>
+        </div>
+    </nav>
+
+    <main class="home-main">
+        <!-- Hero Section -->
+        <section class="home-hero">
+            <div class="greeting">
+                <span class="greeting-time" id="greeting-time">Good morning</span>
+                <h1>Welcome back, {{ user.username }}</h1>
+                <p>Here's your health overview</p>
+            </div>
+            <div class="quick-actions">
+                <a href="{{ url_for('data_entry') }}" class="quick-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Add Entry
+                </a>
+                <a href="{{ url_for('dashboard') }}" class="quick-action-btn secondary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    View Dashboard
+                </a>
+            </div>
+        </section>
+
+        <!-- NEW CONTENT: Snapshot & Goals -->
+        <div class="home-grid">
+            <!-- Latest Snapshot Card -->
+            <div class="snapshot-card">
+                <div class="snapshot-header">
+                    <h3>Latest Health Snapshot</h3>
+                    {% if recent_entries %}
+                        <span class="status-badge {{ recent_entries[0].status|lower }}">{{ recent_entries[0].status }}</span>
+                    {% endif %}
+                </div>
+                
+                {% if recent_entries %}
+                    <div class="snapshot-values">
+                        <div class="snapshot-stat">
+                            <h2>{{ recent_entries[0].heart_rate }}</h2>
+                            <span>BPM</span>
+                        </div>
+                        <div class="snapshot-stat">
+                            <h2>{{ recent_entries[0].steps }}</h2>
+                            <span>Steps</span>
+                        </div>
+                        <div class="snapshot-stat">
+                            <h2>{{ recent_entries[0].sleep }}h</h2>
+                            <span>Sleep</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: auto; font-size: 0.85rem; color: var(--text-muted);">
+                        Last updated: {{ recent_entries[0].entry_time }}
+                    </div>
+                {% else %}
+                    <div class="no-data-box">
+                        <p>No data recorded yet.</p>
+                        <a href="{{ url_for('add_data') }}" class="btn btn-primary" style="margin-top: 1rem;">Add First Entry</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Weekly Goals Card -->
+            <div class="snapshot-card goal-card">
+                <div class="snapshot-header">
+                    <h3>Weekly Goals</h3>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--primary)" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+
+                <div class="goal-item">
+                    <div class="goal-label">
+                        <span>Daily Steps Avg</span>
+                        <span>Goal: 10,000</span>
+                    </div>
+                    <div class="goal-bar">
+                        <!-- Example width: 75% -->
+                        <div class="goal-fill" style="width: 75%; background: var(--primary);"></div>
+                    </div>
+                </div>
+
+                <div class="goal-item">
+                    <div class="goal-label">
+                        <span>Sleep Avg</span>
+                        <span>Goal: 8 Hours</span>
+                    </div>
+                    <div class="goal-bar">
+                        <!-- Example width: 90% -->
+                        <div class="goal-fill" style="width: 90%; background: var(--purple);"></div>
+                    </div>
+                </div>
+
+                <div class="goal-item">
+                    <div class="goal-label">
+                        <span>Health Score</span>
+                        <span>Based on status</span>
+                    </div>
+                    <div class="goal-bar">
+                        <!-- Example width: 80% -->
+                        <div class="goal-fill" style="width: 80%; background: var(--success);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Insights Section -->
+        <section class="health-tips">
+            <h2>Health Insights</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </div>
+                    <h3>Heart Health</h3>
+                    <p>A normal resting heart rate for adults ranges from 60 to 100 beats per minute.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                            <line x1="9" y1="9" x2="9.01" y2="9"/>
+                            <line x1="15" y1="9" x2="15.01" y2="9"/>
+                        </svg>
+                    </div>
+                    <h3>Sleep Quality</h3>
+                    <p>Consistent sleep schedules improve mood and cognitive performance significantly.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <h3>Stay Active</h3>
+                    <p>Regular physical activity can improve your muscle strength and boost endurance.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Set greeting based on time
+        const hour = new Date().getHours();
+        const greetingEl = document.getElementById('greeting-time');
+        if (hour < 12) {
+            greetingEl.textContent = 'Good morning';
+        } else if (hour < 18) {
+            greetingEl.textContent = 'Good afternoon';
+        } else {
+            greetingEl.textContent = 'Good evening';
+        }
+    </script>
+</body>
+</html>

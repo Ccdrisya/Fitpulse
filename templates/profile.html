@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - FitPulse</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-page">
+    <nav class="navbar dashboard-nav">
+        <div class="nav-brand">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+            </div>
+            <span class="brand-name">FitPulse</span>
+        </div>
+        <div class="nav-links">
+<a href="{{ url_for('welcome') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('data_entry') }}" class="nav-link">Add Data</a>
+            <a href="{{ url_for('profile') }}" class="nav-link active">Profile</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-avatar">
+                <span>JD</span>
+            </div>
+            <a href="{{ url_for('logout') }}" class="btn btn-ghost">Logout</a>
+        </div>
+    </nav>
+
+    <main class="profile-main">
+        <div class="profile-header">
+            <div class="profile-cover"></div>
+            <div class="profile-info">
+                <div class="profile-avatar-large">
+                    <span>JD</span>
+                </div>
+                <div class="profile-details">
+                    <h1>{{ user.username }}</h1>
+                    <p>{{ user.email }}</p>
+                    <div class="profile-badges">
+                        <span class="badge badge-success">Active User</span>
+                        <span class="badge badge-info">{{ user.age }} years old</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-section">
+                <h2>Personal Information</h2>
+                <form class="profile-form" action="{{ url_for('profile') }}" method="POST">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" value="{{ user.username }}" readonly class="readonly">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" value="{{ user.email }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" value="{{ user.age }}" min="1" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender">
+                                <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+
+            <div class="profile-section">
+                <h2>Health Statistics</h2>
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">{{ stats.avg_heart_rate }}</span>
+                            <span class="stat-label">Avg Heart Rate</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">{{ stats.total_entries }}</span>
+                            <span class="stat-label">Total Entries</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">{{ stats.days_active }}</span>
+                            <span class="stat-label">Days Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h2>Change Password</h2>
+                <form class="profile-form" action="{{ url_for('change_password') }}" method="POST">
+                    <div class="form-group">
+                        <label for="current_password">Current Password</label>
+                        <input type="password" id="current_password" name="current_password" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new_password">New Password</label>
+                            <input type="password" id="new_password" name="new_password" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password" required minlength="6">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Change Password</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

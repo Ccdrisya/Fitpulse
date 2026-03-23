@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - FitPulse</title>
+    <!-- FIX: Ensure this matches your folder structure. Likely just 'style.css' -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="auth-page">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+            </div>
+            <span class="brand-name">FitPulse</span>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('welcome') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+            <a href="{{ url_for('register') }}" class="nav-link active">Register</a>
+        </div>
+    </nav>
+
+    <main class="auth-main">
+        <div class="auth-container">
+            <div class="auth-visual">
+                <div class="visual-content">
+                    <div class="stats-preview">
+                        <div class="stat-item">
+                            <span class="stat-number">98%</span>
+                            <span class="stat-label">Detection Accuracy</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Monitoring</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">50K+</span>
+                            <span class="stat-label">Active Users</span>
+                        </div>
+                    </div>
+                    <h2>Join FitPulse Today</h2>
+                    <p>Start your journey to better health monitoring and early anomaly detection.</p>
+                </div>
+            </div>
+            <div class="auth-form-container">
+                <div class="form-header">
+                    <h1>Create Account</h1>
+                    <p>Fill in your details to get started</p>
+                </div>
+
+                <!-- FLASH MESSAGES BLOCK ADDED HERE -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="alert alert-{{ category }}">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                <!-- END FLASH MESSAGES -->
+
+                <form class="auth-form" action="{{ url_for('register') }}" method="POST">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <div class="input-wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="username" name="username" placeholder="Choose username" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <div class="input-wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <div class="input-wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                <input type="number" id="age" name="age" placeholder="Your age" required min="1" max="120">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <div class="input-wrapper select-wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="8.5" cy="7" r="4"/>
+                                    <line x1="20" y1="8" x2="20" y2="14"/>
+                                    <line x1="23" y1="11" x2="17" y2="11"/>
+                                </svg>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="password" name="password" placeholder="Create password" required minlength="6">
+                            </div>
+                        </div>
+                        <!-- NEW: Confirm Password Field -->
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm password" required minlength="6">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" name="terms" required>
+                            <span class="checkmark"></span>
+                            <span>I agree to the <a href="#">Terms & Conditions</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        Create Account
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </form>
+                <div class="auth-footer">
+                    <!-- FIXED LINK -->
+                    <p>Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JAVASCRIPT FOR PASSWORD MATCHING -->
+    <script>
+        const form = document.querySelector('.auth-form');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+
+        form.addEventListener('submit', function(e) {
+            if (password.value !== confirmPassword.value) {
+                e.preventDefault(); // Stop submission
+                alert("Passwords do not match!");
+            }
+        });
+
+        // Visual feedback
+        confirmPassword.addEventListener('input', function() {
+            if (this.value !== password.value) {
+                this.style.borderColor = '#ef4444'; // Red
+            } else {
+                this.style.borderColor = '#10b981'; // Green
+            }
+        });
+    </script>
+</body>
+</html>

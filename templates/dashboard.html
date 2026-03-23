@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FitPulse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Grid Layout for 3 Charts Side-by-Side */
+        .charts-grid-wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 Equal Columns */
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive: Stack on mobile */
+        @media (max-width: 992px) {
+            .charts-grid-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Graph Container Styling */
+        .graph-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            position: relative;
+            height: 350px; /* Fixed height for uniformity */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .graph-header h3 { font-size: 1rem; font-weight: 600; }
+
+        .graph-legend { width: 12px; height: 12px; border-radius: 50%; }
+
+        .chart-area { flex: 1; position: relative; }
+        
+        canvas { width: 100% !important; height: 100% !important; }
+
+        /* Tooltip */
+        .chart-tooltip {
+            position: absolute;
+            background: #fff;
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 10;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .chart-tooltip.visible { opacity: 1; }
+
+        /* Table Row Selection */
+        .data-table tbody tr.selected { background: rgba(22, 165, 150, 0.15) !important; border-left: 3px solid var(--primary); }
+    </style>
+</head>
+<body class="dashboard-page">
+    <nav class="navbar dashboard-nav">
+        <div class="nav-brand">
+            <div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+            <span class="brand-name">FitPulse</span>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('dashboard') }}" class="nav-link active">Dashboard</a>
+            <a href="{{ url_for('data_entry') }}" class="nav-link">Add Data</a>
+            <a href="{{ url_for('profile') }}" class="nav-link">Profile</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-avatar"><span>JD</span></div>
+            <a href="{{ url_for('logout') }}" class="btn btn-ghost">Logout</a>
+        </div>
+    </nav>
+
+    <main class="dashboard-main">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1>Health Dashboard</h1>
+                <p>Visualizing Time vs Health Metrics</p>
+            </div>
+            <div class="header-actions">
+                <select id="days-selector" onchange="changeTimeRange()" style="padding: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px;">
+                    <option value="7" {% if days == 7 %}selected{% endif %}>Last 7 Days</option>
+                    <option value="30" {% if days == 30 %}selected{% endif %}>Last 30 Days</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Averages Section -->
+        <section class="status-overview">
+            <div class="status-card">
+                <div class="status-icon healthy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+                <div class="status-info">
+                    <span class="status-label">Avg Heart Rate</span>
+                    <span class="status-value">{{ avg_heart_rate }} <small>bpm</small></span>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                <div class="status-info">
+                    <span class="status-label">Avg Steps</span>
+                    <span class="status-value">{{ avg_steps }}</span>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+                <div class="status-info">
+                    <span class="status-label">Avg Sleep</span>
+                    <span class="status-value">{{ avg_sleep }} <small>hrs</small></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAPHS SECTION (Side-by-Side Grid) -->
+        <section class="charts-section">
+            <h2 style="margin-bottom: 1.5rem;">Trend Visualization (Time vs Value)</h2>
+            <div class="charts-grid-wrapper">
+                
+                <!-- Graph 1: Heart Rate -->
+                <div class="graph-container">
+                    <div class="graph-header">
+                        <h3>Heart Rate (BPM)</h3>
+                        <div class="graph-legend" style="background:#16a596;"></div>
+                    </div>
+                    <div class="chart-area">
+                        <canvas id="hrChart"></canvas>
+                    </div>
+                    <div id="tooltip-hr" class="chart-tooltip"></div>
+                </div>
+
+                <!-- Graph 2: Steps -->
+                <div class="graph-container">
+                    <div class="graph-header">
+                        <h3>Steps (Count)</h3>
+                        <div class="graph-legend" style="background:#f59e0b;"></div>
+                    </div>
+                    <div class="chart-area">
+                        <canvas id="stepsChart"></canvas>
+                    </div>
+                    <div id="tooltip-steps" class="chart-tooltip"></div>
+                </div>
+
+                <!-- Graph 3: Sleep -->
+                <div class="graph-container">
+                    <div class="graph-header">
+                        <h3>Sleep (Hours)</h3>
+                        <div class="graph-legend" style="background:#8b5cf6;"></div>
+                    </div>
+                    <div class="chart-area">
+                        <canvas id="sleepChart"></canvas>
+                    </div>
+                    <div id="tooltip-sleep" class="chart-tooltip"></div>
+                </div>
+
+            </div>
+        </section>
+
+         <!-- DATA TABLE -->
+        <section class="data-table-section">
+            <div class="section-header">
+                <h2>Recorded Data</h2>
+                <!-- Debug: This shows how many rows Python sent -->
+                <span style="color:var(--text-muted); font-size:0.9rem;">
+                    Records found: {{ health_data|length }}
+                </span>
+            </div>
+            <a href="{{ url_for('export_data') }}" class="export-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Export
+                </a>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Heart Rate</th>
+                            <th>Steps</th>
+                            <th>Sleep</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        {% for entry in health_data %}
+                        <tr id="row-{{ loop.index0 }}" onclick="selectEntry({{ loop.index0 }})">
+                            <td>{{ entry.entry_time }}</td>
+                            <td>{{ entry.heart_rate }}</td>
+                            <td>{{ entry.steps }}</td>
+                            <td>{{ entry.sleep }}</td>
+                            <td><span class="status-badge {{ entry.status|lower }}">{{ entry.status }}</span></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align:center; color:var(--text-muted);">
+                                No data available for this period.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 1. Data from Flask
+        const dates = {{ chart_data.dates | tojson }};
+        const heartRates = {{ chart_data.heart_rate | tojson }};
+        const steps = {{ chart_data.steps | tojson }};
+        const sleep = {{ chart_data.sleep | tojson }};
+
+        let selectedEntryIndex = null;
+
+        // 2. Graph Drawing Function with Axes
+        function drawGraph(canvasId, data, color, tooltipId) {
+            const canvas = document.getElementById(canvasId);
+            const tooltip = document.getElementById(tooltipId);
+            const ctx = canvas.getContext('2d');
+
+            // Handle High DPI screens
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            const w = rect.width;
+            const h = rect.height;
+            
+            // Margins
+            const margin = { top: 10, right: 10, bottom: 30, left: 40 };
+            const plotW = w - margin.left - margin.right;
+            const plotH = h - margin.top - margin.bottom;
+
+            ctx.clearRect(0, 0, w, h);
+
+            if (!data || data.length === 0) {
+                ctx.fillStyle = '#64748b';
+                ctx.font = "12px Inter";
+                ctx.textAlign = "center";
+                ctx.fillText("No data available", w/2, h/2);
+                return;
+            }
+
+            // Calculations
+            const maxVal = Math.max(...data) * 1.1;
+            const minVal = Math.min(...data) * 0.9;
+            const range = maxVal - minVal || 1;
+
+            const getX = (i) => margin.left + (i / (data.length - 1 || 1)) * plotW;
+            const getY = (v) => margin.top + plotH - ((v - minVal) / range) * plotH;
+
+            // 1. Draw Y-Axis Lines
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.fillStyle = '#64748b';
+            ctx.font = "10px Inter";
+            ctx.textAlign = "right";
+            
+            for (let i = 0; i <= 4; i++) {
+                const y = margin.top + (plotH / 4) * i;
+                const val = maxVal - (range / 4) * i;
+                
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(w - margin.right, y);
+                ctx.stroke();
+                
+                ctx.fillText(Math.round(val), margin.left - 5, y + 3);
+            }
+
+            // 2. Draw X-Axis Labels
+            ctx.textAlign = "center";
+            const labelSkip = Math.ceil(dates.length / 4); 
+            dates.forEach((date, i) => {
+                if (i % labelSkip === 0) {
+                    const x = getX(i);
+                    // Show only MM-DD part
+                    ctx.fillText(date.substring(5), x, h - 10);
+                }
+            });
+
+            // 3. Draw Line
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            data.forEach((v, i) => {
+                const x = getX(i);
+                const y = getY(v);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // 4. Draw Points
+            data.forEach((v, i) => {
+                const x = getX(i);
+                const y = getY(v);
+                ctx.beginPath();
+                ctx.fillStyle = color;
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 5. Highlight Selected Entry
+            if (selectedEntryIndex !== null && data[selectedEntryIndex] !== undefined) {
+                const x = getX(selectedEntryIndex);
+                const y = getY(data[selectedEntryIndex]);
+                
+                // Vertical Line
+                ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+                ctx.setLineDash([2, 2]);
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, margin.top + plotH);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Big Circle
+                ctx.beginPath();
+                ctx.fillStyle = '#fff';
+                ctx.arc(x, y, 6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.fillStyle = color;
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Tooltip
+                tooltip.style.left = (x + 10) + 'px';
+                tooltip.style.top = (y - 20) + 'px';
+                tooltip.innerHTML = `${dates[selectedEntryIndex]}<br><b>${data[selectedEntryIndex]}</b>`;
+                tooltip.classList.add('visible');
+            } else {
+                tooltip.classList.remove('visible');
+            }
+        }
+
+        // 3. Selection Logic
+        function selectEntry(index) {
+            if (selectedEntryIndex === index) {
+                selectedEntryIndex = null; // Deselect
+            } else {
+                selectedEntryIndex = index;
+            }
+
+            // Update Table UI
+            const rows = document.querySelectorAll('#table-body tr');
+            rows.forEach((r, i) => {
+                if (i === selectedEntryIndex) r.classList.add('selected');
+                else r.classList.remove('selected');
+            });
+
+            renderAllCharts();
+        }
+
+        function renderAllCharts() {
+            // Clear tooltips first
+            document.querySelectorAll('.chart-tooltip').forEach(t => t.classList.remove('visible'));
+            
+            drawGraph('hrChart', heartRates, '#16a596', 'tooltip-hr');
+            drawGraph('stepsChart', steps, '#f59e0b', 'tooltip-steps');
+            drawGraph('sleepChart', sleep, '#8b5cf6', 'tooltip-sleep');
+        }
+
+        function changeTimeRange() {
+            const days = document.getElementById('days-selector').value;
+            window.location.href = "{{ url_for('dashboard') }}?days=" + days;
+        }
+
+        window.addEventListener('load', renderAllCharts);
+        window.addEventListener('resize', renderAllCharts);
+    </script>
+</body>
+</html>

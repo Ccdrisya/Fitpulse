@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>FitPulse - Health Anomaly Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="welcome-page">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+            </div>
+            <span class="brand-name">FitPulse</span>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('welcome') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+            <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+        </div>
+    </nav>
+
+    <main class="welcome-main">
+        <div class="welcome-hero">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="pulse-dot"></span>
+                    Health Monitoring Platform
+                </div>
+                <h1 class="hero-title">
+                    Detect Health Anomalies
+                    <span class="highlight">Before They Detect You</span>
+                </h1>
+                <p class="hero-subtitle">
+                    FitPulse uses advanced algorithms to analyze your fitness device data, 
+                    identifying potential health issues early through continuous monitoring 
+                    of heart rate, activity levels, and sleep patterns.
+                </p>
+                <div class="hero-actions">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">
+                        Get Started
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary">I Have an Account</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="visual-card main-card">
+                    <div class="card-header">
+                        <span class="card-title">Health Overview</span>
+                        <span class="status-badge healthy">Healthy</span>
+                    </div>
+                    <div class="metrics-grid">
+                        <div class="metric">
+                            <div class="metric-value">
+                                <span class="value">72</span>
+                                <span class="unit">bpm</span>
+                            </div>
+                            <span class="metric-label">Heart Rate</span>
+                            <div class="mini-chart heart"></div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">
+                                <span class="value">8,420</span>
+                            </div>
+                            <span class="metric-label">Steps Today</span>
+                            <div class="progress-ring">
+                                <svg viewBox="0 0 36 36">
+                                    <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    <path class="ring-fill" stroke-dasharray="84, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">
+                                <span class="value">7.5</span>
+                                <span class="unit">hrs</span>
+                            </div>
+                            <span class="metric-label">Sleep</span>
+                            <div class="sleep-bars">
+                                <div class="bar" style="height: 60%"></div>
+                                <div class="bar" style="height: 80%"></div>
+                                <div class="bar" style="height: 75%"></div>
+                                <div class="bar" style="height: 90%"></div>
+                                <div class="bar" style="height: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="visual-card floating-card alert-card">
+                    <div class="alert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                    </div>
+                    <div class="alert-content">
+                        <span class="alert-title">Anomaly Detected</span>
+                        <span class="alert-desc">Elevated heart rate during rest</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="features-section">
+            <h2 class="section-title">How FitPulse Protects Your Health</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <h3>Real-time Monitoring</h3>
+                    <p>Continuous tracking of vital signs with instant analysis and feedback on your health metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3>Anomaly Detection</h3>
+                    <p>AI-powered algorithms identify unusual patterns that may indicate health concerns.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 20V10"/>
+                            <path d="M12 20V4"/>
+                            <path d="M6 20v-6"/>
+                        </svg>
+                    </div>
+                    <h3>Detailed Analytics</h3>
+                    <p>Comprehensive dashboards with visualizations to understand your health trends.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3>Privacy First</h3>
+                    <p>Your health data is encrypted and secure. You control who sees your information.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>FitPulse - Infosys Health Anomaly Detection Project</p>
+    </footer>
+
+    <script>
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
