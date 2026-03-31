@@ -1,91 +1,160 @@
-# Hi there, I'm Drisya C C 👋
+Here is the complete and final `README.md` file with the **Dataset (CSV)** section included.
 
-🎓 MCA Student | 💻 Python & Web Developer | 🌱 Lifelong Learner
+```markdown
+# FitPulse - Health Anomaly Detection
 
-Passionate about building web applications, exploring machine learning, and turning ideas into real projects. Currently pursuing my MCA and expanding my skills across full-stack development and data science.
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)
+![Flask](https://img.shields.io/badge/Flask-2.0%2B-lightgrey?style=for-the-badge&logo=flask)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
----
-
-## 🔗 Connect with Me
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/drisya-c-c/)
-[![CodePen](https://img.shields.io/badge/CodePen-000000?style=for-the-badge&logo=codepen&logoColor=white)](https://codepen.io/Ccdrisya)
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ccdrisya)
+**FitPulse** is a web-based health monitoring application designed to track vital signs, visualize health trends, and automatically detect anomalies. Built as an Infosys project, it provides users with actionable insights into their heart rate, daily activity, and sleep patterns.
 
 ---
 
-## 💻 Tech Stack
-
-### 🗣️ Languages
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-
-### ☁️ Hosting / SaaS
-![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)
-
-### 🚀 Frameworks, Platforms & Libraries
-![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
-![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?style=for-the-badge&logo=webpack&logoColor=black)
-![Celery](https://img.shields.io/badge/Celery-37814A?style=for-the-badge&logo=celery&logoColor=white)
-![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
-![Jinja](https://img.shields.io/badge/Jinja-B41717?style=for-the-badge&logo=jinja&logoColor=white)
-![Nodemailer](https://img.shields.io/badge/Nodemailer-22B8F0?style=for-the-badge&logo=gmail&logoColor=white)
-![Razorpay](https://img.shields.io/badge/Razorpay-02042B?style=for-the-badge&logo=razorpay&logoColor=3395FF)
-
-### 🖥️ Servers
-![Django Server](https://img.shields.io/badge/Django_Server-092E20?style=for-the-badge&logo=django&logoColor=white)
-![Flask Server](https://img.shields.io/badge/Flask_Server-000000?style=for-the-badge&logo=flask&logoColor=white)
-![Node Server](https://img.shields.io/badge/Node_Server-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-
-### 🗄️ Databases / ORM
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
-![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white)
-
-### 🎨 Design
-![Canva](https://img.shields.io/badge/Canva-00C4CC?style=for-the-badge&logo=canva&logoColor=white)
-![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
-
-### 🤖 ML / DL
-![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)
-![Keras](https://img.shields.io/badge/Keras-D00000?style=for-the-badge&logo=keras&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
-![Matplotlib](https://img.shields.io/badge/Matplotlib-11557C?style=for-the-badge&logo=python&logoColor=white)
-![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)
-![SciPy](https://img.shields.io/badge/SciPy-8CAAE6?style=for-the-badge&logo=scipy&logoColor=white)
-
-### 🔧 CI/CD & VCS
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
-
-### 🔩 Other
-![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
-![Venv](https://img.shields.io/badge/Virtual_Environment-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![PrettyTable](https://img.shields.io/badge/PrettyTable-306998?style=for-the-badge&logo=python&logoColor=white)
+## 📖 Table of Contents
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Dataset](#-dataset)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [License](#-license)
 
 ---
 
-## 🚀 Projects
+## ✨ Features
 
-| Project | Description | Tech |
-|---|---|---|
-| 💓 [FitPulse Health](https://github.com/Ccdrisya/FitPulse_Health) | Health anomaly detection app | Flask, Python, MySQL |
-| 🌱 [Floranet](https://github.com/Ccdrisya/Floranet-garden) | Gardening community platform | Django, SQLite, Razorpay |
-| 🎉 [Yukthi](https://yukthismc.onrender.com/) | Tech fest website — St. Mary's College | Node.js, Express, MongoDB |
-| 📝 [Blog Management System](https://github.com/Ccdrisya/Blog-manag-Sys) | CLI-based blog platform | Python, MySQL |
+- **User Authentication**: Secure registration and login system with password hashing.
+- **Data Entry**: Intuitive forms to log Heart Rate, Steps, and Sleep duration.
+- **Automated Anomaly Detection**:
+  - Calculates health status (Healthy, Warning, Critical) based on input metrics.
+  - Visual alerts for abnormal heart rates or sleep deprivation.
+- **Interactive Dashboard**:
+  - Real-time visualization using HTML5 Canvas (Time vs. Value graphs).
+  - Clickable data table rows to highlight specific points on graphs.
+- **Data Export**: One-click export of health records to CSV for external analysis.
+- **Responsive Design**: Modern dark-themed UI optimized for both desktop and mobile devices.
 
 ---
 
-*"Code is like humor. When you have to explain it, it's bad." — Cory House*
+## 🛠 Tech Stack
+
+**Backend:**
+- Python 3.x
+- Flask (Web Framework)
+
+**Frontend:**
+- HTML5, CSS3, JavaScript
+- HTML5 Canvas API (for Charts)
+- Jinja2 (Templating)
+
+---
+
+## 📁 Project Structure
+
+```text
+FitPulse/
+│
+├── app.py                # Main Flask application logic
+├── database.sql          # Database schema
+├── health_dataset.csv    # Sample dataset for testing
+├── requirements.txt      # Python dependencies
+├── README.md             # Project documentation
+│
+├── static/
+│   └── style.css         # All CSS styles (Dark Theme)
+│
+└── templates/
+    ├── welcome.html      # Landing page
+    ├── login.html        # Login form
+    ├── register.html     # Registration form
+    ├── home.html         # User home dashboard
+    ├── dashboard.html    # Main visualization & data table
+    ├── data_entry.html   # Form to add health data
+    └── profile.html      # User profile settings
+```
+
+---
+
+## 📊 Dataset
+
+This repository includes a sample dataset (`health_dataset.csv`) containing sample health records.
+
+- **File:** `health_dataset.csv`
+- **Columns:**
+  - `Date`: Timestamp of the entry.
+  - `Heart_Rate`: Beats per minute (bpm).
+  - `Steps`: Daily step count.
+  - `Sleep`: Hours of sleep.
+  - `Status`: Calculated health status (Healthy, Warning, Critical).
+
+You can view this file in Excel, Google Sheets, or any text editor.
+
+---
+
+## ⚙️ Installation
+
+Follow these steps to set up the project locally.
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/fitpulse.git
+cd fitpulse
+```
+
+### 2. Set up the Virtual Environment (Optional but recommended)
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# Mac/Linux
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+Create a `requirements.txt` file with the following content:
+```text
+Flask
+mysql-connector-python
+werkzeug
+```
+Then run:
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Database Setup
+1. Create a database in your MySQL client.
+2. Run the `database.sql` script to create the necessary tables.
+3. Configure your database credentials in `app.py`.
+
+### 5. Run the Application
+```bash
+python app.py
+```
+Open your browser and navigate to `http://127.0.0.1:5000`.
+
+---
+
+## 🚀 Usage
+
+1. **Register**: Create a new account via the "Register" page.
+2. **Login**: Access your personalized dashboard.
+3. **Add Data**: Click "Add Data" in the navigation bar to log your daily health metrics.
+4. **Analyze**: 
+   - View your averages on the Dashboard.
+   - Observe trends in the Canvas graphs.
+   - Click on a row in the table to highlight that data point on the graph.
+5. **Export**: Click the "Export" button to download your data as a CSV file.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+**Developed with ❤️ for Infosys Project**
+```
