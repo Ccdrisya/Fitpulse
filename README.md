@@ -154,5 +154,5 @@ This project is licensed under the MIT License.
 
 ---
 
-**Developed with ❤️ for Infosys Project**
+**Developed for Infosys springboard internship**
 ```
