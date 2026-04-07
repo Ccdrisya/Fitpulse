@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import pandas as pd
 import os
-from analysis import process_full_analysis # Import our new module
+from analysis import process_full_analysis 
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -13,7 +13,7 @@ app.secret_key = 'your_secret_key_here'
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'rootuser1', # CHANGE THIS
+    'password': 'rootuser1',
     'database': 'fit'
 }
 
@@ -91,6 +91,13 @@ def logout():
     session.clear()
     return redirect(url_for('welcome'))
 
+
+@app.context_processor
+def inject_user():
+    if 'username' in session:
+        return dict(user={'username': session['username']})
+    return dict(user=None)
+
 @app.route('/home')
 @login_required
 def home():
@@ -151,6 +158,8 @@ def upload_data():
                     (session['username'], int(hr), int(steps), float(sleep), status, date_val)
                 )
                 count += 1
+
+                
                 
             conn.commit()
             cursor.close()
@@ -238,8 +247,31 @@ def dashboard():
 @app.route('/export_data')
 @login_required
 def export_data():
-    # ... (keep existing export code) ...
-    pass 
+    username = session['username']
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT entry_time, heart_rate, steps, sleep, status FROM health_data WHERE username = %s",
+        (username,)
+    )
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    if not data:
+        flash("No data to export", "warning")
+        return redirect(url_for('dashboard'))
+
+    df = pd.DataFrame(data)
+
+    response = make_response(df.to_csv(index=False))
+    response.headers["Content-Disposition"] = "attachment; filename=health_data.csv"
+    response.headers["Content-Type"] = "text/csv"
+
+    return response
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -277,6 +309,35 @@ def profile():
     conn.close()
     
     return render_template('profile.html', user=user, stats=stats)
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    current = request.form.get('current_password')
+    new = request.form.get('new_password')
+    confirm = request.form.get('confirm_password')
+
+    if new != confirm:
+        flash("Passwords do not match", "danger")
+        return redirect(url_for('profile'))
+
+    # TODO: verify current password + update in DB
+
+    flash("Password updated successfully", "success")
+    return redirect(url_for('profile'))
+
+@app.route('/delete_all', methods=['POST'])
+@login_required
+def delete_all():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM health_data WHERE username = %s", (session['username'],))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for('dashboard'))
 
 if __name__ == '__main__':
     app.run(debug=True)

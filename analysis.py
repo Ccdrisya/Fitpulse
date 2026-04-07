@@ -125,10 +125,22 @@ def compute_severity(df):
     return df
 
 def process_full_analysis(df):
-    """Pipeline to run all analysis."""
-    df = preprocess_data(df)
-    df = rule_based_detection(df)
-    # Run prophet on heart rate only for web speed
-    df = run_prophet_anomaly(df, 'heart_rate_bpm') 
-    df = compute_severity(df)
+    def get_status(row):
+        hr = row.get('heart_rate_bpm', 0)
+        steps = row.get('steps', 0)
+        sleep = row.get('sleep', 0)
+
+        # 🚨 CRITICAL CONDITIONS
+        if hr > 110 or hr < 50 or steps < 1000 or sleep < 4:
+            return "Critical"
+
+        # ⚠️ WARNING CONDITIONS
+        elif hr > 90 or hr < 60 or steps < 5000 or sleep < 6:
+            return "Warning"
+
+        # ✅ HEALTHY
+        else:
+            return "Healthy"
+
+    df['severity'] = df.apply(get_status, axis=1)
     return df

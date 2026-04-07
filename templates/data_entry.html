@@ -49,7 +49,7 @@
             <a href="{{ url_for('profile') }}" class="nav-link">Profile</a>
         </div>
         <div class="nav-user">
-            <div class="user-avatar"><span>JD</span></div>
+            <div class="user-avatar"><span>{{ user.username[0] }}</span></div>
             <a href="{{ url_for('logout') }}" class="btn btn-ghost">Logout</a>
         </div>
     </nav>
@@ -58,13 +58,13 @@
         <div class="entry-container">
             <div class="entry-header">
                 <h1>Add Health Data</h1>
-                <p>Record metrics manually or import a dataset file</p>
+                <p>Record metrics</p>
             </div>
 
             <!-- TAB BUTTONS -->
             <div class="entry-tabs">
                 <button class="tab-btn active" onclick="switchTab('manual')">Manual Entry</button>
-                <button class="tab-btn" onclick="switchTab('bulk')">Bulk Import (CSV/JSON)</button>
+                <!-- <button class="tab-btn" onclick="switchTab('bulk')">Bulk Import (CSV/JSON)</button> -->
             </div>
 
             <div class="entry-content">
@@ -123,7 +123,7 @@
                     </form>
                 </div>
 
-                <!-- TAB 2: BULK IMPORT (New Feature) -->
+                <!-- TAB 2: BULK IMPORT (New Feature)
                 <div id="bulk-tab" class="tab-content">
                     <div class="tips-card" style="margin-bottom: 1.5rem;">
                         <h4>How to use Bulk Import</h4>
@@ -152,7 +152,7 @@
                             </button>
                         </div>
                     </form>
-                </div>
+                </div> -->
 
             </div>
         </div>
