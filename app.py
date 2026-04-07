@@ -1,10 +1,11 @@
+from asyncio import sleep
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import pandas as pd
 import os
-from analysis import process_full_analysis 
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -134,8 +135,6 @@ def upload_data():
                 flash('Unsupported format. Use CSV or JSON.', 'error')
                 return redirect(request.url)
 
-            # Process using our new analysis module
-            df = process_full_analysis(df)
             
             # Save to DB
             conn = get_db_connection()
@@ -150,7 +149,15 @@ def upload_data():
                 hr = row.get('heart_rate') or row.get('heart_rate_bpm') or 0
                 steps = row.get('steps') or 0
                 sleep = row.get('sleep') or 0
-                status = row.get('severity', 'Healthy') # Use calculated severity
+                hr = int(hr)
+                sleep = float(sleep)
+
+                if hr >= 120 or sleep < 5:
+                    status = "Critical"
+                elif hr >= 100 or sleep < 6:
+                    status = "Warning"
+                else:
+                    status = "Healthy"# Use calculated severity
                 
                 cursor.execute(
                     """INSERT INTO health_data (username, heart_rate, steps, sleep, status, entry_time)
@@ -182,12 +189,13 @@ def data_entry():
         sleep = float(request.form['sleep'])
         entry_time = datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M')
         
-        # Run basic analysis on single entry
-        df = pd.DataFrame({
-            'heart_rate_bpm': [hr], 'steps': [steps], 'sleep': [sleep]
-        })
-        df = process_full_analysis(df)
-        status = df['severity'].iloc[0]
+        # Simple rule-based logic
+        if hr >= 120 or sleep < 5:
+            status = "Critical"
+        elif hr >= 100 or sleep < 6:
+            status = "Warning"
+        else:
+            status = "Healthy"
 
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -230,7 +238,7 @@ def dashboard():
     # Fix status and add class for CSS
     for entry in health_data:
         if not entry.get('status'):
-            entry['status'] = 'Normal'
+            entry['status'] = 'Healthy'
         status_lower = entry['status'].lower()
         if status_lower in ['healthy', 'normal']:
             entry['status_class'] = 'healthy'
