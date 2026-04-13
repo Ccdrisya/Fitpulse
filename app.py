@@ -2,6 +2,7 @@ from asyncio import sleep
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response
 # import mysql.connector
+import psycopg2
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import pandas as pd
@@ -81,11 +82,19 @@ def register():
         # cursor = conn.cursor(dictionary=True)
         cursor = conn.cursor()
         
+        # cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+        # if cursor.fetchone():
+        #     flash('Username exists', 'error')
+        #     return render_template('register.html')
+
+        #render---
         cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
-        if cursor.fetchone():
-            flash('Username exists', 'error')
+        existing_user = fetch_one_dict(cursor)
+        if existing_user:
+            flash('Username already exists', 'error')
+            cursor.close()
+            conn.close()
             return render_template('register.html')
-            
         cursor.execute(
             'INSERT INTO users (username, email, age, gender, password) VALUES (%s, %s, %s, %s, %s)',
             (username, email, age, gender, password)
@@ -121,7 +130,10 @@ def home():
 
     # latest snapshot (already exists)
     cursor.execute('SELECT * FROM health_data WHERE username = %s ORDER BY entry_time DESC LIMIT 1', (username,))
-    latest = cursor.fetchone()
+    # latest = cursor.fetchone()
+
+#render-----
+    latest = fetch_one_dict(cursor)
 
     # ✅ NEW: last 15 records for anomaly chart
     cursor.execute('''
@@ -131,8 +143,9 @@ def home():
         ORDER BY entry_time ASC 
         LIMIT 15
     ''', (username,))
-    recent_chart = cursor.fetchall()
-
+    # recent_chart = cursor.fetchall()
+    #render----
+    recent_chart = fetch_all_dict(cursor)
     cursor.close()
     conn.close()
 
@@ -257,15 +270,22 @@ def dashboard():
     conn = get_db_connection()
     # cursor = conn.cursor(dictionary=True)
     cursor = conn.cursor()
-
-    cursor.execute(
-        '''SELECT * FROM health_data 
-           WHERE username = %s 
-           AND entry_time >= DATE_SUB(NOW(), INTERVAL %s DAY)
-           ORDER BY entry_time ASC''',
-        (username, days)
-    )
+    # cursor.execute(
+    #     '''SELECT * FROM health_data 
+    #        WHERE username = %s 
+    #        AND entry_time >= DATE_SUB(NOW(), INTERVAL %s DAY)
+    #        ORDER BY entry_time ASC''',
+    #     (username, days)
+    # )
     # health_data = cursor.fetchall()
+#render-----
+    cursor.execute(
+    '''SELECT * FROM health_data 
+       WHERE username = %s 
+       AND entry_time >= NOW() - INTERVAL '%s days'
+       ORDER BY entry_time ASC''',
+    (username, days)
+)
     health_data = fetch_all_dict(cursor)
     cursor.close()
     conn.close()
