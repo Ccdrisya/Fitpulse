@@ -30,6 +30,40 @@ def get_db_connection():
 # def get_db_connection():
 #     return mysql.connector.connect(**db_config)
 
+@app.route('/init_db')
+def init_db():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username TEXT UNIQUE,
+        email TEXT,
+        age INT,
+        gender TEXT,
+        password TEXT
+    );
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS health_data (
+        id SERIAL PRIMARY KEY,
+        username TEXT,
+        heart_rate INT,
+        steps INT,
+        sleep FLOAT,
+        status TEXT,
+        entry_time TIMESTAMP
+    );
+    """)
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return "Tables created!"
+
 def login_required(f):
     def wrap(*args, **kwargs):
         if 'user_id' not in session:
