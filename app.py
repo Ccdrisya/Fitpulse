@@ -20,7 +20,7 @@ app.secret_key = 'your_secret_key_here'
 # }
 def get_db_connection():
     return psycopg2.connect(
-        host="dpg-d7eg14q8qa3s73c04uj0-a",
+        host="dpg-d7eg14q8qa3s73c04uj0-a.oregon-postgres.render.com",
         database="fit_oidr",
         user="fit_oidr_user",
         password="9rH37xO5o98fxvrz4pTMngRZwOW8MKyR",
