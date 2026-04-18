@@ -2,7 +2,7 @@ from asyncio import sleep
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response
 # import mysql.connector
-import psycopg2
+# import psycopg2
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import pandas as pd
@@ -21,11 +21,11 @@ app.secret_key = 'your_secret_key_here'
 
 def get_db_connection():
     return psycopg2.connect(
-        host=os.environ.get("DB_HOST"),
-        database=os.environ.get("DB_NAME"),
-        user=os.environ.get("DB_USER"),
-        password=os.environ.get("DB_PASSWORD"),
-        port=os.environ.get("DB_PORT")
+        host=os.environ.get("dpg-d7eg14q8qa3s73c04uj0-a"),
+        database=os.environ.get("fit_oidr"),
+        user=os.environ.get("fit_oidr_user"),
+        password=os.environ.get("9rH37xO5o98fxvrz4pTMngRZwOW8MKyR"),
+        port=os.environ.get("5432")
     )
 # def get_db_connection():
 #     return mysql.connector.connect(**db_config)
