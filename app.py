@@ -19,13 +19,16 @@ app.secret_key = 'your_secret_key_here'
 #     'database': 'fit'
 # }
 def get_db_connection():
-    return psycopg2.connect(
-        host="dpg-d7eg14q8qa3s73c04uj0-a.oregon-postgres.render.com",
-        database="fit_oidr",
-        user="fit_oidr_user",
-        password="9rH37xO5o98fxvrz4pTMngRZwOW8MKyR",
-        port="5432"
-    )
+    if os.environ.get("RENDER"):  
+        return psycopg2.connect(
+            host=os.environ.get("DB_HOST"),
+            database=os.environ.get("DB_NAME"),
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            port=os.environ.get("DB_PORT")
+        )
+    else:
+        return mysql.connector.connect(**db_config)
 # def get_db_connection():
 #     return mysql.connector.connect(**db_config)
 
